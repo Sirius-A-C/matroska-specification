@@ -1,6 +1,6 @@
 %%%
-title = "Matroska Specifications"
-abbrev = "Matroska"
+title = "Matroska Media Container Format Specifications"
+abbrev = "Matroska Format"
 ipr= "trust200902"
 area = "art"
 workgroup = "cellar"
@@ -10,7 +10,7 @@ keyword = [""]
 name = "Internet-Draft"
 stream = "IETF"
 status = "informational"
-value = "draft-ietf-cellar-matroska-04"
+value = "draft-ietf-cellar-matroska-05"
 
 [[author]]
 initials="S."
@@ -64,7 +64,7 @@ Matroska is an open standards project. This means for personal use it is absolut
 
 # Status of this document
 
-This document is a work-in-progress specification defining the Matroska file format as part of the [IETF Cellar working group](https://datatracker.ietf.org/wg/cellar/charter/). But since it's quite complete it is used as a reference for the development of libmatroska. Legacy versions of the specification can be found [here](https://matroska.org/files/matroska.pdf) (PDF doc by Alexander Noé -- outdated).
+This document is a work-in-progress specification defining the Matroska file format as part of the [IETF Cellar working group](https://datatracker.ietf.org/wg/cellar/charter/). But since it's quite complete it is used as a reference for the development of libmatroska. A legacy version of the specification can be found [here](https://www.matroska.org/files/matroska_file_format_alexander_noe.pdf) (PDF doc by Alexander Noé -- outdated).
 
 For a simplified diagram of the layout of a Matroska file, see the [Diagram page](diagram.md).
 
@@ -143,8 +143,6 @@ Each level can have different meanings for audio and video. The ORIGINAL_MEDIUM 
 Bit 0 is the most significant bit.
 
 Frames using references SHOULD be stored in "coding order". That means the references first and then the frames referencing them. A consequence is that timestamps might not be consecutive. But a frame with a past timestamp MUST reference a frame already known, otherwise it's considered bad/void.
-
-There can be many Blocks in a BlockGroup provided they all have the same timestamp. It is used with different parts of a frame with different priorities.
 
 #### Block Header
 
@@ -226,8 +224,6 @@ The `SimpleBlock` is inspired by the [Block structure](#block-structure). The ma
 Bit 0 is the most significant bit.
 
 Frames using references SHOULD be stored in "coding order". That means the references first and then the frames referencing them. A consequence is that timestamps might not be consecutive. But a frame with a past timestamp MUST reference a frame already known, otherwise it's considered bad/void.
-
-There can be many `Block Elements` in a `BlockGroup` provided they all have the same timestamp. It is used with different parts of a frame with different priorities.
 
 ##### SimpleBlock Header
 

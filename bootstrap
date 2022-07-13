@@ -6,6 +6,11 @@ export LC_ALL=
 FOUND=
 NEEDED=
 
+MMARK_VERSION=2.1.1
+XML2RFC_VERSION=2.33.0
+XSLTPROC_VERSION=1.1.0
+XMLLINT_VERSION=20903
+
 BOOTSTRAP_MAKE=bootstrap.mak
 RUNTIMES_MAKE=runtimes.mak
 
@@ -49,23 +54,24 @@ check() {
 }
 
 # check make
-check mmark 2.1.1
-check xml2rfc 2.30.0
+check mmark $MMARK_VERSION
+check xml2rfc $XML2RFC_VERSION
 # apt install xsltproc
-check xsltproc 1.1.0
+check xsltproc $XSLTPROC_VERSION
 # apt install libxml2-utils
-check xmllint 20903
+check xmllint $XMLLINT_VERSION
 
 cat > $BOOTSTRAP_MAKE << EOF
+# Generated from boostrap
+
 PREFIX=\$(abspath ./build)
 EOF
 
-echo "# calls the local or installed tool " > $RUNTIMES_MAKE
+echo > $RUNTIMES_MAKE << EOF
+# Generated from boostrap
 
-for t in $FOUND; do
-    echo ".$t:" >> $BOOTSTRAP_MAKE
-    echo "$t" | awk '{ tool = sprintf("%s_CALL := %s", toupper($0), $0); print tool }' >> $RUNTIMES_MAKE
-done
+# calls the local or installed tool
+EOF
 
 for t in $NEEDED; do
     echo .$t: .build$t >> $BOOTSTRAP_MAKE
@@ -81,7 +87,17 @@ for t in $NEEDED; do
     fi
 done
 
-[ -n "$PACKAGES" ] && echo "To-be-built packages: $PACKAGES"
+if [ ! -f ../ebml-specification/EBMLSchema.xsd ]; then
+    echo out of tree DETECTED, getting a temporary EBMLSchema.xsd
+    wget --no-clobber --unlink https://raw.githubusercontent.com/cellar-wg/ebml-specification/master/EBMLSchema.xsd
+    if [ ! -f EBMLSchema.xsd ]; then
+        echo Missing EBML Schema
+        exit 1
+    fi
+    echo EBML_SCHEMA_XSD=EBMLSchema.xsd >> $RUNTIMES_MAKE
+fi
+
+[ -n "$PACKAGES" ] && echo "Out of date packages: $PACKAGES"
 
 case `uname` in
 	Linux)
@@ -118,11 +134,15 @@ cat >> $BOOTSTRAP_MAKE << EOF
 all: $TARGETS
 	@echo "You are ready to build Matroska specifications"
 
-MMARK_VERSION=2.1.1
+MMARK_VERSION=$MMARK_VERSION
 MMARK_OS=$MMARK_OS
 MMARK_MACHINE=$MMARK_MACHINE
+XML2RFC_VERSION=$XML2RFC_VERSION
+XSLTPROC_VERSION=$XSLTPROC_VERSION
+XMLLINT_VERSION=$XSLTPROC_VERSION
 
 include tools.mak
 EOF
 
+echo Getting necessary tools
 make -f $BOOTSTRAP_MAKE

@@ -1,6 +1,6 @@
 %%%
-title = "Matroska Tags"
-abbrev = "Matroska"
+title = "Matroska Media Container Tag Specifications"
+abbrev = "Matroska Tags"
 ipr= "trust200902"
 area = "art"
 workgroup = "cellar"
@@ -10,7 +10,7 @@ keyword = [""]
 name = "Internet-Draft"
 stream = "IETF"
 status = "informational"
-value = "draft-ietf-cellar-tags-03"
+value = "draft-ietf-cellar-tags-04"
 
 [[author]]
 initials="S."
